@@ -1,4 +1,5 @@
 interface Book {
+    id: string | number;
     title: string;
     author: string;
     genre: string;
@@ -7,7 +8,6 @@ interface Book {
     availableCopies:number;
     coverColor:string;
     coverUrl:string;
-    video:string;
     summary:string;
     isLoanedBook?:boolean;
     description: string;

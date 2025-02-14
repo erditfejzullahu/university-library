@@ -11,7 +11,7 @@ const Home = () => {
       <BookList 
         title="Latest Books"
         books={sampleBooks}
-        containerClassNAme="mt-28"
+        containerClassName="mt-28"
       />
     </>
   )
