@@ -41,10 +41,10 @@ export const navigationLinks = [
   ];
   
   export const FIELD_NAMES = {
-    fullname: "Full name",
-    email: "Email",
+    fullName: "Emri i plote",
+    email: "Emaili",
     universityId: "University ID Number",
-    password: "Password",
+    password: "Fjalekalimi",
     universityCard: "Upload University ID Card",
   };
   
