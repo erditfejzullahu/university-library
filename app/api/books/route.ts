@@ -31,6 +31,6 @@ export async function POST(res: Request) {
         return NextResponse.json({newBook, message: "Book added successfully"}, {status:200});
     } catch (error) {
         console.error(error);
-        return NextResponse.json({message: "Error in adding book"}, {status:400})
+        return NextResponse.json({message: "Error in adding book"}, {status:500})
     }
 }

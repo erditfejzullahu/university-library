@@ -17,6 +17,6 @@ export async function DELETE(res: Request){
         return NextResponse.json({message: "Borrowed Book Deleted successfully"}, {status: 200})
     } catch (error) {
         console.error(error);
-        return NextResponse.json({message: "Error in deleting borrowed book"}, {status: 400})
+        return NextResponse.json({message: "Error in deleting borrowed book"}, {status: 500})
     }
 }

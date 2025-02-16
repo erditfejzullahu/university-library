@@ -43,6 +43,6 @@ export async function PATCH(req: Request) {
 
     } catch (error) {
         console.error(error);
-        return NextResponse.json({message: "Error in updating users"}, {status: 400});
+        return NextResponse.json({message: "Error in updating users"}, {status: 500});
     }
 }
