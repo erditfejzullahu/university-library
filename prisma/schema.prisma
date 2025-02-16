@@ -22,4 +22,34 @@ model User {
   universityIdCard String
   createdAt DateTime @default(now())
   lastActivity DateTime @default(now())
+  borrowedBooks BorrowedBooks[]
+}
+
+model Books {
+  id String @id @default(uuid())
+  title String @db.VarChar(150)
+  author String
+  Genre String
+  rating Float
+  totalCopies Int
+  availableCopies Int
+  description String
+  coverColor String
+  videoUrl String
+  summary String
+
+  borrowedBooks BorrowedBooks[]
+}
+
+model BorrowedBooks {
+  id String @id @default(uuid())
+  bookId String
+  userId String
+  borrowedAt DateTime @default(now())
+  dueDate DateTime?
+
+  book Books @relation(fields: [bookId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([bookId, userId])
 }
