@@ -24,7 +24,7 @@ const authenticator = async () => {
 
 const ImageUpload = ({onFileChange}: {onFileChange: (filePath: string) => void}) => {
     const ikUploadRef = useRef(null);
-    const [file, setFile] = useState<{filePath: string} | null>(null);
+    const [file, setFile] = useState<Record<string, string> | null>(null);
 
     const onError = (error: any) => {
         console.log(error);
@@ -36,6 +36,8 @@ const ImageUpload = ({onFileChange}: {onFileChange: (filePath: string) => void})
     }
 
     const onSuccess = (res: any) => {
+        console.log(res);
+        
         setFile(res)
         onFileChange(res.filePath)
         toast({
@@ -51,7 +53,7 @@ const ImageUpload = ({onFileChange}: {onFileChange: (filePath: string) => void})
             ref={ikUploadRef}
             onError={onError}
             onSuccess={onSuccess}
-            fileName="test.png"
+            fileName={file?.name}
             />
             
             <button className="upload-btn bg-dark-300" onClick={(e) => {
