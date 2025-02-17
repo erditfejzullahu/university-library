@@ -23,9 +23,7 @@ export const signInWithCredentials = async (params: Pick<AuthCredentials, "email
 }
 
 export const signUp = async (params: AuthCredentials) => {
-    const {fullName, email, universityId, password, universityIdCard} = params;
-    console.log(params);
-    
+    const {fullName, email, universityId, password, universityIdCard} = params;    
 
     //check if user exist
     const existingUser = await prisma.user.findUnique({where: {email}})
