@@ -7,7 +7,7 @@ export async function PATCH(res: Request) {
     try {
         const {id, ...updateData} = await res.json();
 
-        if(!id){
+        if(id === null){
             return NextResponse.json({message: "userId is required"}, {status: 400})
         }
 
@@ -28,7 +28,7 @@ export async function DELETE(res: Request) {
         const {searchParams} = new URL(res.url);
         const userId = searchParams.get("userId");
 
-        if(!userId){
+        if(userId === null){
             return NextResponse.json({message: "UserId is required"}, {status: 400});
         }
 

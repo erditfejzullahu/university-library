@@ -24,7 +24,7 @@ export async function GET(req: Request) {
             users = await prisma.user.findMany();
         }
     
-        if(!users || users.length === 0){
+        if(users === null || users.length === 0){
             NextResponse.json({message: "No users found"}, {status: 404})
         }
     

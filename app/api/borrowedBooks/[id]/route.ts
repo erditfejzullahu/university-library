@@ -8,7 +8,7 @@ export async function DELETE(res: Request){
         const {searchParams} = new URL(res.url);
         const borrowId = searchParams.get("borrowId");
 
-        if(!borrowId){
+        if(borrowId === null){
             return NextResponse.json({message: "borrowedBookId required"}, {status: 400})
         }
 

@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export async function GET(){
     try {
         const books = await prisma.books.findMany();
-        if(!books || books.length === 0){
+        if(books === null || books.length === 0){
             return NextResponse.json({message: "No books found"}, {status: 404})
         }
     
@@ -20,7 +20,7 @@ export async function GET(){
 export async function POST(res: Request) {
     const bookData = await res.json();
     try {
-        if(!bookData){
+        if(bookData === null){
             return NextResponse.json({message: "Missing data"}, {status: 400})
         }
 

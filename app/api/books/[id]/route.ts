@@ -8,7 +8,7 @@ export async function DELETE(req: Request){
         const {searchParams} = new URL(req.url)
         const bookId = searchParams.get("bookId");
 
-        if(!bookId){
+        if(bookId === null){
             return NextResponse.json({message: "bookId is required"}, {status: 400})
         }
 
@@ -28,7 +28,7 @@ export async function PATCH(req: Request) {
         const body = await req.json();
         const {id, ...otherData} = body;
 
-        if(!id){
+        if(id === null){
             return NextResponse.json({message: "BookId is required"}, {status: 400})
         }
 

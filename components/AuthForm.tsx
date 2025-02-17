@@ -9,7 +9,7 @@ import Link from "next/link";
 import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
 import ImageUpload from "./ImageUpload";
 import { toast } from "@/hooks/use-toast";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 interface Props<T extends FieldValues>{
     schema: ZodType<T>,
@@ -63,7 +63,7 @@ const AuthForm = <T extends FieldValues>({type, schema, defaultValues, onSubmit}
                             <FormItem>
                                 <FormLabel className="capitalize">{FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]}</FormLabel>
                                     <FormControl>
-                                        {field.name === 'universityCard' ? ( <ImageUpload onFileChange={field.onChange} /> ) : (
+                                        {field.name === 'universityIdCard' ? ( <ImageUpload onFileChange={field.onChange} /> ) : (
                                             <Input required type={FIELD_TYPES[field.name as keyof typeof FIELD_TYPES]} {...field} className="form-input" />
                                         )}
                                     </FormControl>
