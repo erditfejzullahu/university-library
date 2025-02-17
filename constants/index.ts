@@ -45,7 +45,7 @@ export const navigationLinks = [
     email: "Emaili",
     universityId: "University ID Number",
     password: "Fjalekalimi",
-    universityCard: "Upload University ID Card",
+    universityIdCard: "Upload University ID Card",
   };
   
   export const FIELD_TYPES = {

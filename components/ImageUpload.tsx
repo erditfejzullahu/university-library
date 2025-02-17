@@ -65,7 +65,7 @@ const ImageUpload = ({onFileChange}: {onFileChange: (filePath: string) => void})
             }}>
                 <Image src={"/icons/upload.svg"} alt="upload-icon" width={20} height={20} className="object-contain"/>
                 <p className="text-base text-light-100">Ngarkoni nje fajll</p>
-                {file && <p className="upload-filename">{file.filePath}</p>}
+                {file && <p className="upload-filename break-all max-w-40 mb-1 ml-4">{file.filePath}</p>}
                 </button>
 
                 {file && (

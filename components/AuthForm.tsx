@@ -8,6 +8,8 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
 import ImageUpload from "./ImageUpload";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/router";
 
 interface Props<T extends FieldValues>{
     schema: ZodType<T>,
@@ -17,13 +19,29 @@ interface Props<T extends FieldValues>{
 }
 
 const AuthForm = <T extends FieldValues>({type, schema, defaultValues, onSubmit}: Props<T>) => {
+    const router = useRouter();
     const isSignedIn = type === "SIGN_IN"
     const form: UseFormReturn<T> = useForm({
         resolver: zodResolver(schema),
         defaultValues: defaultValues as DefaultValues<T>,
     })
 
-    const handleSubmit: SubmitHandler<T> = async (data) => {};
+    const handleSubmit: SubmitHandler<T> = async (data) => {
+        const result = await onSubmit(data)
+        if(result.success){
+            toast({
+                title: "Sukses",
+                description: isSignedIn ? "Sapo jeni kycur me sukses!" : "Sapo keni krijuar llogarine me sukses!"
+            })
+            router.push('/')
+        } else {
+            toast({
+                title: "Dicka shkoi gabim",
+                description: isSignedIn ? "Dicka shkoi gabim ne kycjen tuaj!" : "Dicka shkoi gabim ne krijimin e llogarise tuaj!",
+                variant: "destructive"
+            })
+        }
+    };
 
   return (
     <div className="flex flex-col gap-4">

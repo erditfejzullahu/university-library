@@ -18,13 +18,24 @@ enum Role {
   ADMIN
 }
 
+enum Status {
+  IN_REVIEW
+  ACCEPTED
+}
+
+enum BorrowedStatus {
+  BORROWED
+  RETURNED
+}
+
 model User {
   id String @id @default(uuid())
   fullName String
   password String
   email String @unique
   role Role @default(USER)
-  universityId String @unique
+  status Status @default(IN_REVIEW)
+  universityId Int @unique
   universityIdCard String
   createdAt DateTime @default(now())
   lastActivity DateTime @default(now())
@@ -51,6 +62,7 @@ model BorrowedBooks {
   id String @id @default(uuid())
   bookId String
   userId String
+  status BorrowedStatus @default(BORROWED)
   borrowedAt DateTime @default(now())
   dueDate DateTime?
 
