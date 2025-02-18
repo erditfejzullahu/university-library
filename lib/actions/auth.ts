@@ -6,6 +6,7 @@ import { hash } from "bcryptjs";
 import { headers } from "next/headers";
 import { rateLimiter } from "../ratelimiter";
 import { redirect } from "next/navigation";
+import { sendNecessaryEmail } from "../necessaryEmails";
 
 const prisma = new PrismaClient();
 
@@ -49,7 +50,7 @@ export const signUp = async (params: AuthCredentials) => {
     const hashedPassword = await hash(password, 10);    
 
     try {
-        await prisma.user.create({
+        const newUser = await prisma.user.create({
             data: {
                 fullName,
                 email,
@@ -58,6 +59,8 @@ export const signUp = async (params: AuthCredentials) => {
                 password: hashedPassword
             }
         })
+
+        sendNecessaryEmail({fullName, email, type: "WELCOME", id: newUser.id });
 
         await signInWithCredentials({email, password});
 

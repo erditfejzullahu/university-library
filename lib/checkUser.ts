@@ -46,7 +46,8 @@ export const checkUserLogins = async () => {
             where: {
                 lastActivity: {
                     lte: twoDaysAgoIsoString
-                }
+                },
+                status: "ACCEPTED"
             }
         })
         
