@@ -43,9 +43,9 @@ export const navigationLinks = [
   export const FIELD_NAMES = {
     fullName: "Emri i plote",
     email: "Emaili",
-    universityId: "University ID Number",
+    universityId: "ID e universitetit",
     password: "Fjalekalimi",
-    universityIdCard: "Upload University ID Card",
+    universityIdCard: "Ngarkoni karten e universitetit",
   };
   
   export const FIELD_TYPES = {

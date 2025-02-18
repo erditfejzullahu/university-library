@@ -1,9 +1,17 @@
+"use client"
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { bookSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation'
 import React from 'react'
-import {Form, useForm} from "react-hook-form"
+import {useForm} from "react-hook-form"
+import { Form } from '@/components/ui/form';
 import { z } from 'zod';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import FileUpload from '@/components/FileUpload';
+import ColorPicker from '../ColorPicker';
 
 interface Props extends Partial<Book> {
     type?: "create" | "update",
@@ -29,11 +37,258 @@ const BookForm = ({type, ...book}: Props) => {
         }
     })
 
-    const onSubmit = async(values: z.infer<typeof bookSchema>) => {};
+    const onSubmit = async(values: z.infer<typeof bookSchema>) => {
+        console.log(values);
+        
+    };
   return (
     <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+                control={form.control}
+                name='title'
+                render={({field}) => (
+                    <FormItem className="flex flex-col gap-1">
+                        <FormLabel className="text-base font-normal text-dark-500">
+                            Titulli Librit
+                        </FormLabel>
+                        <FormControl>
+                            <Input 
+                                required
+                                placeholder='Shkruani ketu titullin e librit'
+                                {...field}
+                                className="book-form_input"
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            >
+            </FormField>
+            <FormField
+                control={form.control}
+                name='author'
+                render={({field}) => (
+                    <FormItem className="flex flex-col gap-1">
+                        <FormLabel className="text-base font-normal text-dark-500">
+                            Emri i autorit
+                        </FormLabel>
+                        <FormControl>
+                            <Input 
+                                required
+                                placeholder='Shkruani ketu emrin e autorit'
+                                {...field}
+                                className="book-form_input"
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            >
+            </FormField>
+            <FormField
+                control={form.control}
+                name='genre'
+                render={({field}) => (
+                    <FormItem className="flex flex-col gap-1">
+                        <FormLabel className="text-base font-normal text-dark-500">
+                            Zhanri i librit
+                        </FormLabel>
+                        <FormControl>
+                            <Input 
+                                required
+                                placeholder='Shkruani ketu zhanrin e librit'
+                                {...field}
+                                className="book-form_input"
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            >
+            </FormField>
+            <FormField 
+                control={form.control}
+                name="rating"
+                render={({field}) => (
+                    <FormItem className="flex flex-col gap-1">
+                        <FormLabel className="text-base font-normal text-dark-500">
+                            Vleresimi i librit
+                        </FormLabel>
+                        <FormControl>
+                            <Input 
+                                type='number'
+                                required
+                                placeholder='Paraqitni vleresimin e librit ketu'
+                                {...field}
+                                className="book-form_input"
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}    
+            >
+            </FormField>
+            <FormField
+                control={form.control}
+                name='totalCopies'
+                render={({field}) => (
+                    <FormItem className="flex flex-col gap-1">
+                        <FormLabel className="text-base text-dark-500 font-normal">
+                            Numri i kopjeve te librit
+                        </FormLabel>
+                        <FormControl>
+                            <Input 
+                                type='number'
+                                {...field}
+                                min={1}
+                                max={10000}
+                                required
+                                placeholder='Paraqitni ketu numrin e kopjeve te librit'
+                                className="book-form_input"
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            >
+            </FormField>
+            <FormField
+                control={form.control}
+                name='availableCopies'
+                render={({field}) => (
+                    <FormItem className="flex flex-col gap-1">
+                        <FormLabel className="text-base text-dark-500 font-normal">
+                            Kopjet ne dispozicion
+                        </FormLabel>
+                        <FormControl>
+                            <Input 
+                                type='number'
+                                {...field}
+                                min={1}
+                                max={10000}
+                                required
+                                placeholder='Paraqitni numrin e kopjeve ne dispozicion'
+                                className="book-form_input"
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            >
+            </FormField>
 
+            <FormField
+                control={form.control}
+                name='coverColor'
+                render={({field}) => (
+                    <FormItem className="flex flex-col gap-1">
+                        <FormLabel className="text-base text-dark-500 font-normal">
+                            Ngjyra e librit
+                        </FormLabel>
+                        <FormControl>
+                            <ColorPicker onPickerChange={field.onChange} value={field.value}/>
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            >
+            </FormField>
+            <FormField
+                control={form.control}
+                name='coverUrl'
+                render={({field}) => (
+                    <FormItem className='flex flex-col gap-1'>
+                        <FormLabel className="text-base text-dark-500 font-normal">
+                            Imazhi i librit
+                        </FormLabel>
+                        <FormControl>
+                            <FileUpload 
+                                type="image"
+                                accept='image/*'
+                                placeholder='Ngarko nje imazh te librit'
+                                folder='books/covers'
+                                variant='light'
+                                onFileChange={field.onChange}
+                                value={field.value} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            >
+
+            </FormField>
+
+            <FormField 
+                control={form.control}
+                name='description'
+                render={({field}) => (
+                    <FormItem className="flex flex-col gap-1">
+                        <FormLabel className="text-base font-normal text-dark-500">
+                            Shkruani pershkrimin
+                        </FormLabel>
+                        <FormControl>
+                            <Textarea
+                                {...field}
+                                required
+                                placeholder='Pershkruani librin ketu'
+                                className="book-form_input"
+                                rows={10}
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+
+            <FormField
+                control={form.control}
+                name='videoUrl'
+                render={({field}) => (
+                    <FormItem className='flex flex-col gap-1'>
+                        <FormLabel className="text-base font-normal">
+                            Videoja e librit
+                        </FormLabel>
+                        <FormControl>
+                            <FileUpload 
+                                type='video'
+                                accept='video/*'
+                                placeholder='Ngarko nje video te librit'
+                                folder='books/videos'
+                                variant='light'
+                                onFileChange={field.onChange}
+                                value={field.value}
+                                />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            >
+
+            </FormField>
+            <FormField
+                control={form.control}
+                name='summary'
+                render={({field}) => (
+                    <FormItem className="flex flex-col gap-1">
+                        <FormLabel className="text-base font-normal text-dark-500">
+                            Shkruani permbledhjen
+                        </FormLabel>
+                        <FormControl>
+                            <Textarea 
+                                {...field}
+                                placeholder='Shkruani ketu permbledhjen e librit'
+                                required
+                                className="book-form_input"
+                                rows={20}
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            >
+            </FormField>
+            <Button type='submit' className="book-form_btn">Shtoni librin ne librari</Button>
         </form>
     </Form>
   )
