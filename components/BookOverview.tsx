@@ -2,9 +2,26 @@ import Image from 'next/image'
 import React from 'react'
 import { Button } from './ui/button'
 import BookCover from './BookCover'
+import BorrowButton from './BorrowButton'
+import { prisma } from '@/lib/prisma'
+
+interface Props extends Book {
+  userId: string;
+}
+
+const BookOverview = async ({title, author, genre, rating, totalCopies, description, availableCopies, coverColor, coverUrl, id, userId}: Props) => {
+  const user = await prisma.user.findUnique({
+    where: {id: userId}
+  })
+
+  if(user === null) return null; 
+
+  const borrowEligbility = {
+    isEligible: availableCopies > 0 && user.status === "ACCEPTED",
+    message: availableCopies <= 0 ? "Nuk mund te huazosh kete liber" : "Sapo huazove kete liber"
+  }
 
 
-const BookOverview = ({title, author, genre, rating, totalCopies, description, availableCopies, coverColor, coverUrl}: Book) => {
   return (
     <section className="book-overview">
         <div className="flex flex-1 flex-col gap-5">
@@ -31,10 +48,7 @@ const BookOverview = ({title, author, genre, rating, totalCopies, description, a
 
             <p className="book-description">{description}</p>
 
-            <Button className="book-overview_btn">
-              <Image src={"icons/book.svg"} alt='book' width={20} height={20}/>
-              <p className="font-bebas-neue text-xl text-dark-100">Huazoni</p>
-            </Button>
+            <BorrowButton bookId={id} userId={userId} borrowEligbility={borrowEligbility}/>
         </div>
 
         <div className='relative flex flex-1 justify-center'>

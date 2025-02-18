@@ -10,7 +10,6 @@ export const createBook = async (params: BookParams) => {
 
         return {success: true, data: newBook}
     } catch (error) {
-        console.error("Error details:", error instanceof Error ? error.stack : error);
         console.error(error);
         return {
             success: false,

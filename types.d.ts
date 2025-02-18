@@ -1,5 +1,5 @@
 interface Book {
-    id: string | number;
+    id: string;
     title: string;
     author: string;
     genre: string;
@@ -34,4 +34,9 @@ interface BookParams {
     availableCopies: number;
     videoUrl: string;
     summary: string;
+}
+
+interface BorrowBookParams {
+    bookId: string;
+    userId: string;
 }
