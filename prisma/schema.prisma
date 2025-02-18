@@ -54,14 +54,16 @@ model Books {
   id String @id @default(uuid())
   title String @db.VarChar(150)
   author String
-  Genre String
+  genre String
   rating Float
   totalCopies Int
   availableCopies Int
   description String
+  coverUrl String
   coverColor String
   videoUrl String
   summary String
+  createdAt DateTime @default(now())
 
   borrowedBooks BorrowedBooks[]
 }

@@ -1,16 +1,24 @@
+import { auth } from "@/auth"
 import BookList from "@/components/BookList"
 import BookOverview from "@/components/BookOverview"
 import { sampleBooks } from "@/constants"
+import { prisma } from "@/lib/prisma"
 
+const Home = async () => {
+  const session = await auth();
 
-const Home = () => {
+  const latestBooks = await prisma.books.findMany({
+    orderBy: {
+      createdAt: "desc"
+    }
+  })
   return (
     <>
-      <BookOverview {...sampleBooks[0]}/>
+      <BookOverview {...latestBooks[0]} userId={session?.user?.id as string} />
 
       <BookList 
         title="Latest Books"
-        books={sampleBooks}
+        books={latestBooks} // later slice(1) to remove first
         containerClassName="mt-28"
       />
     </>
