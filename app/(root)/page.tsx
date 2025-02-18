@@ -1,7 +1,6 @@
 import { auth } from "@/auth"
 import BookList from "@/components/BookList"
 import BookOverview from "@/components/BookOverview"
-import { sampleBooks } from "@/constants"
 import { prisma } from "@/lib/prisma"
 
 const Home = async () => {
@@ -18,7 +17,7 @@ const Home = async () => {
 
       <BookList 
         title="Latest Books"
-        books={latestBooks} // later slice(1) to remove first
+        books={latestBooks.slice(1)} // later slice(1) to remove first
         containerClassName="mt-28"
       />
     </>

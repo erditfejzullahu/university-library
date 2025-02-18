@@ -39,10 +39,10 @@ const BookOverview = ({title, author, genre, rating, totalCopies, description, a
 
         <div className='relative flex flex-1 justify-center'>
           <div className="relative">
-            <BookCover variant="wide" className="z-10" coverColor={coverColor} coverUrl={`https://ik.imagekit.io/shokulibrit${coverUrl}`}/>
+            <BookCover variant="wide" className="z-10" coverColor={coverColor} coverUrl={coverUrl}/>
 
             <div className="absolute left-16 top-10 rotate-12 opacity-40">
-              <BookCover variant="wide" coverColor={coverColor} coverUrl={`https://ik.imagekit.io/shokulibrit${coverUrl}`}/>
+              <BookCover variant="wide" coverColor={coverColor} coverUrl={coverUrl}/>
             </div>
           </div>
         </div>
