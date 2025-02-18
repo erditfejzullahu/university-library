@@ -6,12 +6,7 @@ import React from 'react'
 const page = () => {
   return (
     <>
-    <form className="mb-10" action={async () => {
-        "use server"
-        await signOut()
-    }}>
-        <Button>Logout</Button>
-    </form>
+    
 
     <BookList title='Borrowed Books' books={[]}></BookList>
     </>
