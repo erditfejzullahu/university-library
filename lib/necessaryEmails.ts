@@ -42,8 +42,8 @@ export const sendNecessaryEmail = async ({fullName, email, type, id}: Props) => 
                     resolve(info);
                 }
             })
-            console.log(`mail send to ${email}: ${info.response}`);
         })
+        console.log(`mail send to ${email}: ${info.response}`);
 
         await prisma.emailSent.create({
             data: {
@@ -55,7 +55,6 @@ export const sendNecessaryEmail = async ({fullName, email, type, id}: Props) => 
                 message: personalizedMessage
             }
         });
-        
     } catch (error) {
         console.error(`error sending email ${error}`);
     }
