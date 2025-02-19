@@ -4,18 +4,16 @@ import BookList from '@/components/BookList';
 import SearchForm from '@/components/SearchForm';
 
 
-const page = async ({searchParam}: {searchParam: Promise<{query?: string}>}) => {
-    const query = (await searchParam)?.query;
-    console.log(query);
-    
+const page = async ({searchParams}: {searchParams: Promise<{query?: string}>}) => {
+    const query = (await searchParams).query;    
     
     const books = await prisma.books.findMany({
         where: query ? {
             OR: [
                 {
                         title: {
-                            contains: query,
-                            mode: "insensitive"
+                            contains: query.trim(),
+                            mode: "default"
                         },
                 },
                 {
@@ -30,12 +28,12 @@ const page = async ({searchParam}: {searchParam: Promise<{query?: string}>}) => 
                             mode: "insensitive"
                         }
                 },
-            ]
+            ],
         } : {},
         include: {
             borrowedBooks: true
         }
-    })    
+    })        
 
   return (
     <section className="flex-1">
@@ -48,7 +46,7 @@ const page = async ({searchParam}: {searchParam: Promise<{query?: string}>}) => 
         </div>
         <div>
             <div>
-                <BookList title={query ? "Rezultatet e kerkimit" : "Librat e fundit"} books={books || []}/>
+                <BookList title={query ? "Rezultatet e kerkimit" : "Librat e fundit"} books={books}/>
             </div>
         </div>
     </section>
