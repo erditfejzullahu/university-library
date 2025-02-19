@@ -16,7 +16,7 @@ const Home = async () => {
       <BookOverview {...latestBooks[0]} userId={session?.user?.id as string} />
 
       <BookList 
-        title="Latest Books"
+        title="Librat e fundit"
         books={latestBooks.slice(1)} // later slice(1) to remove first
         containerClassName="mt-28"
       />

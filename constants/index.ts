@@ -12,6 +12,20 @@ export const navigationLinks = [
     },
   ];
   
+  export const hamburgerLinks = [
+    {
+      link: "/",
+      label: "Ballina"
+    },
+    {
+      link: "/my-profile",
+      label: "Profili im"
+    },
+    {
+      link: "/search",
+      label: "Kerkoni"
+    }
+  ]
   export const adminSideBarLinks = [
     {
       img: "/icons/admin/home.svg",

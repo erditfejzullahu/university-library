@@ -9,6 +9,20 @@ export default {
   ],
   theme: {
     extend: {
+      keyframes: {
+        fadeIn: {
+          "0%": {opacity: "0"},
+          "100%": {opacity: "100"}
+        },
+        fadeOut: {
+          "0%": {opacity: "100"},
+          "100%": {opacity: "0"}
+        }
+      },
+      animation: {
+        fadeIn: "fadeIn 0.5s ease-in",
+        fadeOut: "fadeOut 0.5s ease-out"
+      },
       fontFamily: {
         "ibm-plex-sans": ["IBM Plex Sans", "sans-serif"],
         "bebas-neue": ["var(--bebas-neue)"],
@@ -57,6 +71,9 @@ export default {
         primary: {
           DEFAULT: "#E7C9A5",
           admin: "#25388C",
+        },
+        darkBlue: {
+          DEFAULT: "#141c32"
         },
         green: {
           DEFAULT: "#027A48",

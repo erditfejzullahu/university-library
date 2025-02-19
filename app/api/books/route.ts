@@ -1,9 +1,16 @@
+import { auth } from "@/auth";
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
 export async function GET(){
+    const session = await auth();
+
+    if(!session){
+        return NextResponse.json({error: "Unauthorized"}, {status: 401})
+    }
+
     try {
         const books = await prisma.books.findMany();
         if(books === null || books.length === 0){
