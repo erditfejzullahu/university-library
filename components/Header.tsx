@@ -14,7 +14,7 @@ import HamburgerMenu from './HamburgerMenu'
 const Header = ({session}: {session: Session}) => {    
     
   return (
-    <header className="my-10 flex justify-between gap-5">
+    <header className="my-10 flex justify-between gap-5 max-lg:my-6">
         <Link href={"/"} className="flex flex-row items-center gap-2">
             <BookOpenText className="text-white size-10"/>
             <span className="text-white font-bebas-neue text-2xl">ShokuLibrit</span>

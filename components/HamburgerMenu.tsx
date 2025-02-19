@@ -45,13 +45,13 @@ const HamburgerMenu = ({session}: {session: Session}) => {
         <GiHamburgerMenu className={`text-white size-8 transition-all  ${isOpened ? "rotate-90" : "rotate-0"} `} onClick={() => setIsOpened(!isOpened)}/>
     </div>
 
-        {isOpened && <div className={`fixed left-0 top-0 min-h-screen min-w-full bg-black bg-opacity-50 border z-[100] animate-fadeIn min-[520px]:hidden block ${!isOpened && "animate-fadeOut"}`} 
+        {isOpened && <div className={`fixed left-0 top-0 min-h-screen min-w-[100vw] bg-black bg-opacity-50 border z-[100] animate-fadeIn min-[520px]:hidden block ${!isOpened && "animate-fadeOut"}`} 
         onClick={() => {
             setIsOpened(false);
         }}
         >
             <div 
-                className="bg-dark-100 flex-1 flex flex-col justify-between max-w-fit ml-auto p-2 z-[110] shadow-lg !shadow-slate-950 min-h-screen px-4"
+                className="bg-dark-100 flex-1 w-[80%] flex flex-col justify-between ml-auto p-2 z-[110] shadow-lg !shadow-slate-950 min-h-screen px-4"
                 onClick={(e) => e.stopPropagation()}    
             >
                 <div>
@@ -63,8 +63,8 @@ const HamburgerMenu = ({session}: {session: Session}) => {
                                 </AvatarFallback>
                             </Avatar>
                         </div>
-                        <div>
-                            <span className="font-bebas-neue text-white text-[30px]">{session?.user?.name}</span>
+                        <div className="items-center flex">
+                            <span className="font-bebas-neue text-white text-[30px] text-center">{session?.user?.name}</span>
                         </div>
                     </div>
                     <ul className="flex flex-col items-center justify-center mt-4">
@@ -74,7 +74,7 @@ const HamburgerMenu = ({session}: {session: Session}) => {
                             className={cn(
                                 "relative font-bebas-neue text-2xl leading-10 text-light-100 transition-all",
                                 "after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] after:bg-primary after:scale-x-0 after:transition-all after:duration-300",
-                                "hover:after:scale-x-100",
+                                "hover:after:scale-x-100 line-clamp-1",
                                 pathname === item.link ? "!text-primary" : ""
                             )}
                             href={item.link}

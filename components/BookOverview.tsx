@@ -23,7 +23,7 @@ const BookOverview = async ({title, author, genre, rating, totalCopies, descript
 
 
   return (
-    <section className="book-overview">
+    <section className="book-overview !overflow-x-hidden">
         <div className="flex flex-1 flex-col gap-5">
             <h1>{title}</h1>
             <div className="book-info">
