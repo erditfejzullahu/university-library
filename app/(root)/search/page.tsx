@@ -13,7 +13,7 @@ const page = async ({searchParams}: {searchParams: Promise<{query?: string}>}) =
                 {
                         title: {
                             contains: query.trim(),
-                            mode: "default"
+                            mode: "insensitive"
                         },
                 },
                 {
@@ -34,9 +34,10 @@ const page = async ({searchParams}: {searchParams: Promise<{query?: string}>}) =
             borrowedBooks: true
         }
     })        
+console.log(books);
 
   return (
-    <section className="flex-1">
+    <section className="flex-1 !w-full">
         <div className="my-10 items-center justify-center flex flex-col">
             <h4 className="uppercase text-white font-ibm-plex-sans text-center text-lg">Zbulo lexime te reja:</h4>
             <h1 className="text-white font-ibm-plex-sans font-semibold text-center md:text-5xl text-2xl max-w-2xl">Zbulo dhe Shfleto te <span className="text-primary">gjithe librat </span>qe kemi ne librari!</h1>
