@@ -2,6 +2,9 @@ import React from 'react'
 import { prisma } from '@/lib/prisma'
 import BookList from '@/components/BookList';
 import SearchForm from '@/components/SearchForm';
+import { SearchX } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import ResetButton from '@/components/ResetButton';
 
 
 const page = async ({searchParams}: {searchParams: Promise<{query?: string}>}) => {
@@ -47,9 +50,19 @@ console.log(books);
         </div>
         <div>
             <div>
-                <BookList title={query ? "Rezultatet e kerkimit" : "Librat e fundit"} books={books}/>
+                <BookList title={query ? `Rezultatet e kerkimit:` : "Librat e fundit"} books={books} queryTitle={query}/>
             </div>
         </div>
+        {books.length === 0 && (<div>
+            <div className="max-w-lg flex flex-col items-center gap-4 justify-center mx-auto">
+                <div>
+                    <SearchX className="text-primary size-24"/>
+                </div>
+                <h3 className="text-3xl font-ibm-plex-sans text-white text-center">Nuk u gjet asnje liber!</h3>
+                <p className="text-light-100 text-base font-ibm-plex-sans text-center">Nuk patem mundesi te gjejme ndonje liber ne baze te kerkimit tuaj. Provo ndyshoni tekstin e kerkimit!</p>
+                <ResetButton />
+            </div>
+        </div>)}
     </section>
   )
 }

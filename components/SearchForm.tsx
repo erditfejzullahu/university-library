@@ -2,11 +2,9 @@ import { Input } from './ui/input'
 import Form from "next/form"
 import { Search } from 'lucide-react'
 
-const SearchForm = ({query}: {query? : string}) => {
-  console.log(query);
-  
+const SearchForm = ({query}: {query? : string}) => {  
   return (
-    <form action={"/search"} method="GET" className="max-w-2xl mx-auto mb-20">
+    <form action={"/search"} method="GET" className="max-w-2xl mx-auto mb-20 search-form">
       <div className="relative">
         <Input 
           type='text'
