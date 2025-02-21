@@ -31,7 +31,10 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                 return {
                     id: user.id,
                     email: user.email,
-                    name: user.fullName
+                    name: user.fullName,
+                    universityId: user.universityId,
+                    universityIdCard: user.universityIdCard,
+                    verified: user.status === "ACCEPTED" ? true : false
                 }
             }
         })
@@ -42,9 +45,12 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
     callbacks: {
         async jwt({token, user}){
             if(user){
-                token.sub = user.id,
-                token.name = user.name,
-                token.email = user.email
+                token.sub = user.id;
+                token.name = user.name;
+                token.email = user.email;
+                token.universityId = user.universityId;
+                token.universityIdCard = user.universityIdCard;
+                token.verified = user.verified;
             }
 
             return token;
@@ -54,6 +60,9 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                 session.user.id = token.sub as string;
                 session.user.name = token.name as string;
                 session.user.email = token.email as string;
+                session.user.universityId = token.universityId as number;
+                session.user.universityIdCard = token.universityIdCard as string;
+                session.user.verified = token.verified as boolean;
             }
             return session;
         }

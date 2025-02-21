@@ -40,3 +40,16 @@ interface BorrowBookParams {
     bookId: string;
     userId: string;
 }
+
+
+
+interface BorrowedBook {
+    id: string;
+    bookId: string;
+    userId: string;
+    borrowedAt: Date;
+    status: "BORROWED" | "RETURNED";
+    dueDate: Date;
+    returnDate: Date | null;
+    book: Book
+}

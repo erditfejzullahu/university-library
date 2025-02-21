@@ -123,3 +123,7 @@ export const navigationLinks = [
       textColor: "text-[#026AA2]",
     },
   ];
+
+  import icons from "./icons";
+
+  export {icons};
