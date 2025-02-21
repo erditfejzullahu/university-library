@@ -4,6 +4,7 @@ import warning from "../public/icons/warning.svg"
 import tick from "../public/icons/tick.svg"
 import book2 from "../public/icons/book-2.svg"
 import calendar from "../public/icons/calendar.svg"
+import logout from "../public/icons/logout.svg"
 
 export default {
     cardTopPointer,
@@ -11,5 +12,6 @@ export default {
     warning,
     tick,
     book2,
-    calendar
+    calendar,
+    logout
 }
