@@ -3,10 +3,10 @@ import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-export async function PATCH(res: Request) {
+export async function PATCH(res: Request, {params}: {params: {id: string}}) {
     try {
-        const {id, ...updateData} = await res.json();
-
+        const {...updateData} = await res.json();
+        const id = params.id;
         if(id === null){
             return NextResponse.json({message: "userId is required"}, {status: 400})
         }
@@ -23,11 +23,9 @@ export async function PATCH(res: Request) {
     }
 }
 
-export async function DELETE(res: Request) {
+export async function DELETE(res: Request, {params}: {params: {id:string}}) {
     try {
-        const {searchParams} = new URL(res.url);
-        const userId = searchParams.get("userId");
-
+        const userId = params.id;
         if(userId === null){
             return NextResponse.json({message: "UserId is required"}, {status: 400});
         }
