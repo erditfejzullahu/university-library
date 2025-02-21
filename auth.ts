@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 
 export const {handlers, signIn, signOut, auth} = NextAuth({
     session: {
-        strategy: "jwt"
+        strategy: "jwt",
     },
     providers: [
         CredentialsProvider({
@@ -34,7 +34,8 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                     name: user.fullName,
                     universityId: user.universityId,
                     universityIdCard: user.universityIdCard,
-                    verified: user.status === "ACCEPTED" ? true : false
+                    verified: user.status === "ACCEPTED" ? true : false,
+                    role: user.role
                 }
             }
         })
@@ -51,6 +52,7 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                 token.universityId = user.universityId;
                 token.universityIdCard = user.universityIdCard;
                 token.verified = user.verified;
+                token.role = user.role
             }
 
             return token;
@@ -63,6 +65,7 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                 session.user.universityId = token.universityId as number;
                 session.user.universityIdCard = token.universityIdCard as string;
                 session.user.verified = token.verified as boolean;
+                session.user.role = token.role
             }
             return session;
         }
