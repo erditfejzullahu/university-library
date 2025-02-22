@@ -16,7 +16,7 @@ export async function PATCH(res: Request, {params}: {params: {id: string}}) {
             data: updateData
         })
 
-        return NextResponse.json({message: "User updated successfully"}, {status: 200});
+        return NextResponse.json({updateUser, message: "User updated successfully"}, {status: 200});
     } catch (error) {
         console.error(error);
         return NextResponse.json({message: "Error in updating user"}, {status: 400})
