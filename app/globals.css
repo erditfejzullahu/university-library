@@ -27,6 +27,7 @@
   }
 }
 
+
 @layer components {
   .form-btn {
     @apply bg-primary text-dark-100 hover:bg-primary inline-flex min-h-14 w-full items-center justify-center rounded-md px-6 py-2 font-bold text-base !important;
@@ -228,6 +229,10 @@
 @layer utilities {
   .gradient-vertical {
     background: linear-gradient(180deg, #12141d 0%, #12151f 100%);
+  }
+
+  .admin-list {
+    background: linear-gradient(to top, white 0%, white 10%, transparent 20%);
   }
 
   .gradient-gray {
