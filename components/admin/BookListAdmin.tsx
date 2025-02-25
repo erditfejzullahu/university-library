@@ -5,22 +5,36 @@ import React from 'react'
 import BookCover from '../BookCover'
 import { Session } from 'next-auth'
 
-const BookListAdmin = ({request, session}: {request: BorrowedBook, session: Session | null}) => {
-    const borrowDate = new Date();
+interface PropsBook {
+  type: "Book",
+  session: Session | null,
+  request: Book
+}
+
+interface PropsBorrowed {
+  type: "BorrowedBook",
+  session: Session | null,
+  request: BorrowedBook
+}
+
+type Props = PropsBorrowed | PropsBook
+
+const BookListAdmin = ({request, session, type}: Props) => {
+    const borrowDate = new Date(type === "BorrowedBook" ? request.borrowedAt : request.createdAt);
     const outputBorrowDate = borrowDate.toLocaleDateString("sq-AL", {
       day: "numeric",
       month: "numeric",
       year: "2-digit"
     })
   return (
-    <div className="flex flex-row justify-between items-start bg-light-300 rounded-lg p-4">
+    <div className="flex flex-row justify-between items-start bg-light-300 rounded-lg p-4 mb-4">
         <div className="flex flex-row items-center gap-4">
           <div>
-            <BookCover coverUrl={request.book.coverUrl} coverColor={request.book.coverColor} variant="small" />
+            <BookCover coverUrl={type === "BorrowedBook" ? request.book.coverUrl : request.coverUrl} coverColor={type === "BorrowedBook" ? request.book.coverColor : request.coverColor} variant="small" />
           </div>
           <div>
-            <h3 className="text-base font-semibold">{request.book.title}</h3>
-            <p className="text-light-500 text-xs">Nga {request.book.author} * {request.book.genre}</p>
+            <h3 className="text-base font-semibold">{type === "BorrowedBook" ? request.book.title : request.title}</h3>
+            <p className="text-light-500 text-xs">Nga {type === "BorrowedBook" ? request.book.author : request.author} * {type === "BorrowedBook" ? request.book.genre : request.genre}</p>
             <div className="flex flex-row items-center gap-4 mt-2">
               <p className="text-gray-600 text-xs font-ibm-plex-sans">{session?.user.name}</p>
               <p className="flex flex-row items-center">

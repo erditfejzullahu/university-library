@@ -29,9 +29,11 @@ const BorrowRequests = async ({session}: {session: Session | null}) => {
                 <Link href={"/admin/all-borrow-requests"} className="bg-light-300 text-primary-admin font-medium text-sm py-1.5 px-4 rounded-lg">Shiko te gjitha</Link>
             </div>
         </div>
-        <div className="after:content-[''] after:absolute after:h-full after:w-full after:left-0 after:bottom-0 after:admin-list relative">
+        <div className="after:content-[''] after:pointer-events-none after:absolute after:h-full after:w-full after:left-0 after:bottom-0 after:admin-list relative">
             {borrowBooks.map((item) => (
-                <BookListAdmin session={session} key={item.id} request={item}/>
+                <Link href={item.id} key={item.id}>
+                    <BookListAdmin type="BorrowedBook" session={session} request={item}/>
+                </Link>
             ))}
         </div>
     </div>
