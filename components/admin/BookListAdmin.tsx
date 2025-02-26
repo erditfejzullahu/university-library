@@ -1,3 +1,4 @@
+"use client"
 import { icons } from '@/constants'
 import config from '@/lib/config'
 import Image from 'next/image'
@@ -19,9 +20,7 @@ interface PropsBorrowed {
 
 type Props = PropsBorrowed | PropsBook
 
-const BookListAdmin = ({request, session, type}: Props) => {
-  console.log(`${request.id} ${type}`);
-  
+const BookListAdmin = ({request, session, type}: Props) => {  
     const borrowDate = new Date(type === "BorrowBooks" ? request.borrowedAt : request.createdAt);
     const outputBorrowDate = borrowDate.toLocaleDateString("sq-AL", {
       day: "numeric",

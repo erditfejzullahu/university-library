@@ -15,6 +15,19 @@ interface Book {
     createdAt: Date;
 }
 
+type UserRole = "IN_REVIEW" | "ACCEPTED"
+interface User {
+    id: string;
+    fullName: string;
+    email: string;
+    role: string;
+    status: UserRole;
+    universityId: string;
+    universityIdCard: string;
+    createdAt: Date;
+    lastActivity: Date;
+}
+
 interface AuthCredentials {
     fullName: string;
     email: string;
@@ -41,8 +54,6 @@ interface BorrowBookParams {
     bookId: string;
     userId: string;
 }
-
-
 
 interface BorrowedBook {
     id: string;

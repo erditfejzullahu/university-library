@@ -9,8 +9,10 @@ import eye from "../public/icons/admin/eye.svg"
 import adminCalendar from "../public/icons/admin/calendar.svg"
 import plus from "../public/icons/admin/plus.svg"
 import close from "../public/icons/admin/close.svg"
+import garbage from "../public/icons/admin/trash.svg"
 
 export default {
+    garbage,
     plus,
     close,
     adminCalendar,

@@ -10,8 +10,8 @@ import ErrorState from "../ErrorState"
 const BorrowRequests = ({session}: {session: Session | null}) => {
     const [page, setPage] = useState(1)
     const [pageSize, setPageSize] = useState(3)
-    const {data, error, isLoading, isFetching} = useBooks(page, pageSize, "BorrowBooks");
-    // console.log(error);
+    const {data, error, isLoading, isFetching, isError} = useBooks(page, pageSize, "BorrowBooks");
+    console.log(error, ' /???');
     
     if(error) return <ErrorState />
   return (
