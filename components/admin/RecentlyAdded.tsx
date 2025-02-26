@@ -1,15 +1,27 @@
+"use client"
 import { icons } from '@/constants'
 import { Session } from 'next-auth'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 import BookListAdmin from './BookListAdmin'
 import { prisma } from '@/lib/prisma'
+import { useBooks } from '@/hooks/data-fetch'
+import ErrorState from '../ErrorState'
 
-const RecentlyAdded = async ({session}: {session: Session | null}) => {
-  const books = await prisma.books.findMany({
-    take: 6
-  })
+const RecentlyAdded = ({session}: {session: Session | null}) => {
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(5)
+  const {data, error, isFetching, isLoading} = useBooks(page, pageSize, "Books")
+  // console.log(data, ' books');
+  
+  if(error) {
+    console.log(error);
+    
+    return (
+      <ErrorState />
+    )
+  }
   return (
     <div className="flex-1 bg-white rounded-lg p-4 gap-4">
         <div className="flex flex-row justify-between items-center">
@@ -29,7 +41,7 @@ const RecentlyAdded = async ({session}: {session: Session | null}) => {
           </div>
         </Link>
         <div className="mt-4 after:pointer-events-none after:content-[''] after:absolute after:left-0 after:top-0 after:h-full after:w-full after:admin-list">
-          {books.map((item) => (
+          {data?.book.map((item) => (
             <Link key={item.id} href={item.id}>
               <BookListAdmin  session={session} type="Book" request={item}/>
             </Link>

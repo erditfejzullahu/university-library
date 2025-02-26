@@ -1,24 +1,19 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link';
 import BookListAdmin from './BookListAdmin';
 import {Session} from "next-auth"
+import { useBooks } from '@/hooks/data-fetch';
+import ErrorState from "../ErrorState"
 
-const BorrowRequests = async ({session}: {session: Session | null}) => {
-    const borrowBooks = await prisma.borrowedBooks.findMany({
-        where: {
-            status: "BORROWED"
-        },
-        orderBy: {
-            borrowedAt: "desc"
-        },
-        take: 3,
-        include: {
-            book: true
-        },
-    })
-    console.log(borrowBooks);
+const BorrowRequests = ({session}: {session: Session | null}) => {
+    const [page, setPage] = useState(1)
+    const [pageSize, setPageSize] = useState(3)
+    const {data, error, isLoading, isFetching} = useBooks(page, pageSize, "BorrowBooks");
+    // console.log(error);
     
+    if(error) return <ErrorState />
   return (
     <div className="flex-1 flex flex-col gap-4 bg-white rounded-lg p-4">
         <div className="flex flex-row justify-between items-center">
@@ -30,9 +25,9 @@ const BorrowRequests = async ({session}: {session: Session | null}) => {
             </div>
         </div>
         <div className="after:content-[''] after:pointer-events-none after:absolute after:h-full after:w-full after:left-0 after:bottom-0 after:admin-list relative">
-            {borrowBooks.map((item) => (
+            {data?.book.map((item) => (
                 <Link href={item.id} key={item.id}>
-                    <BookListAdmin type="BorrowedBook" session={session} request={item}/>
+                    <BookListAdmin type="BorrowBooks" session={session} request={item}/>
                 </Link>
             ))}
         </div>

@@ -54,3 +54,17 @@ interface BorrowedBook {
     returnDate: Date | null;
     book: Book
 }
+
+interface BookApiResponse {
+    book: Book[];
+    message: string;
+    currentPage: number;
+    totalPages: number;
+}
+
+interface BorrowedBookApiResponse {
+    book: BorrowedBook[];
+    message: string;
+    currentPage: number;
+    totalPages: number;
+}

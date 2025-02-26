@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-export async function GET(){
+export async function GET(req: Request){
     try {
         const borrowedBooks = await prisma.borrowedBooks.findMany({
             include: {book: true}

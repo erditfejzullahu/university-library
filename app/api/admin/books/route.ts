@@ -1,29 +1,60 @@
 import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: Request){
+export async function GET(req: NextRequest){
     try {
-        const {searchParams} = new URL(req.url)
         type requestType = "Books" | "BorrowBooks" | "CountBooks" | "CountBorrowBooks"
-        const type = searchParams.get("type") as requestType | null;
-
+        const type = req.nextUrl.searchParams.get("type") as requestType | null;
+        const page = Number(req.nextUrl.searchParams.get('page') || 1);
+        const pageSize = Number(req.nextUrl.searchParams.get("pageSize") || 10);        
+        
         if(!type) {
             return NextResponse.json({message: "type error"}, {status: 500})
         }
 
-        let books = null;
+        let book;
+        let totalCount;
 
         if(type === "Books"){
-            books = await prisma.books.findMany();
+            const [data, count] = await Promise.all([
+                prisma.books.findMany({
+                    skip: (page - 1) * pageSize,
+                    take: pageSize
+                }),
+                prisma.books.count()
+            ])
+            book = data;
+            totalCount = count;
         }else if(type ===  "BorrowBooks"){
-            books = await prisma.borrowedBooks.findMany();
+            const [data, count] = await Promise.all([
+                prisma.borrowedBooks.findMany({
+                    skip: (page - 1) * pageSize,
+                    take: pageSize,
+                    include: {book: true}
+                }),
+                prisma.borrowedBooks.count()
+            ])
+            book = data;
+            totalCount = count;
         }else if (type === "CountBooks"){
-            books = await prisma.books.count();
+            book = await prisma.books.count();
+            totalCount = book;
         }else if(type === "CountBorrowBooks"){
-            books = await prisma.borrowedBooks.count();
+            book = await prisma.borrowedBooks.count();
+            totalCount = book
         }
+        
+        const totalPages = type === "Books" || type === "BorrowBooks" ? Math.ceil(totalCount! / pageSize) : null
 
-        return NextResponse.json({books ,message: "Operation completed successfully"}, {status: 200})
+        return NextResponse.json(
+            { 
+                book,
+                message: "Operation completed successfully",
+                currentPage: page,
+                totalPages
+            }, 
+            {status: 200}
+        )
         
     } catch (error) {
         console.error(error);
