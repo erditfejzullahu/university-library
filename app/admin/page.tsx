@@ -17,10 +17,10 @@ const page = async () => {
     </section>
     <section className="mt-4">
       <div className="flex flex-row gap-4 justify-between">
-        <Suspense fallback={<Skeleton className="h-28 w-full rounded-lg"/>}>
+        <Suspense fallback={<Skeleton className="h-[200px] w-full rounded-lg"/>}>
           <BorrowRequests session={session} />
         </Suspense>
-        <Suspense fallback={<Skeleton className="h-28 w-full rounded-lg"/>}>
+        <Suspense fallback={<Skeleton className="h-[400px] w-full rounded-lg"/>}>
           <RecentlyAdded session={session}/>
         </Suspense>
       </div>
