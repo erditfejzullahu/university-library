@@ -33,32 +33,32 @@ const deleteUser = (userId: string) => {
 const Page = () => {
     
     const [dialogPopup, setDialogPopup] = useState({
-        statusDialog: false,
-        roleDialog: false,
+        statusDialog: [] as string[],
+        roleDialog: [] as string[],
     })
 
-    const handleDialogs = (type: "Status" | "Role" | "CloseStatus" | "CloseRole") => {
+    const handleDialogs = (type: "Status" | "Role" | "CloseStatus" | "CloseRole", row: User) => {
+      console.log(row);
+      
         if(type === "Role"){
-            setDialogPopup((prev) => ({
-                ...prev,
-                roleDialog: !prev.roleDialog
-            }))
+          setDialogPopup((prev) => ({
+            ...prev,
+            roleDialog: row ? [...prev.roleDialog, row.id] : prev.roleDialog
+          }))
         }else if(type === "Status"){
             setDialogPopup((prev) => ({
-                ...prev,
-                statusDialog: !prev.statusDialog
+              ...prev,
+              statusDialog: row ? [...prev.statusDialog, row.id] : prev.statusDialog
             }))
         }else if(type === "CloseRole"){
             setDialogPopup((prev) => ({
-                ...prev,
-                roleDialog: false
+              ...prev,
+              roleDialog: []
             }))
-        }else if(type ==="CloseStatus"){
-            console.log("po thirret?");
-            
+        }else if(type ==="CloseStatus"){            
             setDialogPopup((prev) => ({
-                ...prev,
-                statusDialog: false
+              ...prev,
+              statusDialog: []
             }))
         }
     }
@@ -89,8 +89,8 @@ const Page = () => {
       accessorKey: "status",
       cell: (info) => (
         <>
-        <span className="block cursor-pointer" onClick={() => handleDialogs("Status")}>{info.getValue() as string}</span>
-            <ChangeStatus type="Status" selected={info.getValue() as string} selectable={["IN_REVIEW", "ACCEPTED"]} opened={dialogPopup.statusDialog} onClose={() => handleDialogs("CloseStatus")}/>
+        <span className="block cursor-pointer animate-pulse repeat-infinite duration-700" onClick={() => handleDialogs("Status", info.row.original)}>{info.getValue() as string}</span>
+            <ChangeStatus type="Status" selected={info.getValue() as string} selectable={["IN_REVIEW", "ACCEPTED"]} opened={dialogPopup.statusDialog.includes(info.row.original.id)} onClose={() => handleDialogs("CloseStatus", info.row.original)}/>
         </>
       )
     },
@@ -135,7 +135,7 @@ const Page = () => {
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <th key={header.id} colSpan={header.colSpan} className="text-light-500 font-semibold text-center p-4 bg-light-300">
+                  <th key={header.id} colSpan={header.colSpan} className="text-light-500 border-b font-semibold text-center p-4 bg-light-300">
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -149,9 +149,9 @@ const Page = () => {
           </thead>
           <tbody>
             {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
+              <tr key={row.id} className="odd:bg-light-400">
                 {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="p-4 text-center text-black font-normal font-ibm-plex-sans text-sm relative">
+                  <td key={cell.id} className="p-4 text-center text-black font-normal font-ibm-plex-sans text-sm relative ">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
