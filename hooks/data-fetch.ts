@@ -1,6 +1,7 @@
 "use client"
 import { keepPreviousData, useMutation, useQueries, useQuery, UseQueryOptions, useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
 import { toast } from "./use-toast";
+import { Role } from "@prisma/client";
 const BASE_URL = process.env.NEXT_PUBLIC_API_ENDPOINT; 
 
 type BookTypes = "BorrowBooks" | "Books"
@@ -27,9 +28,40 @@ const fetchUsers = async () => {
 }
 
 const deleteUser = async (id: string) => {
-  const res = await fetch(`${BASE_URL}/api/admin/users/${id}`, {method: "DELETE"})
+  const res = await fetch(`${BASE_URL}/api/admin/users/${id}`, { method: "DELETE" });
+
+  if (!res.ok) {
+    throw new Error("Failed to delete user"); // Throw an error if the response is not OK
+  }
+
   const data = await res.json();
   return data;
+};
+
+const changeUserRole = async (id: string, role: Role) => {
+  const res = await fetch(`${BASE_URL}/api/admin/userRole/${id}`, {method: "PATCH", body: role})
+  return await res.json();
+}
+
+export const useChangeRole = () => {
+  const queryResult = useMutation({
+    mutationFn: ({id, role}: {id: string, role: Role}) => changeUserRole(id, role),
+    onSuccess: () => {
+      toast({
+        title: "Sukses",
+        description: "Sapo ndryshuat rolin e perdoruesit"
+      })
+    },
+    onError: () => {
+      toast({
+        title: "Gabim",
+        description: "Dicka shkoi gabim, ju lutem provoni perseri!",
+        variant: "destructive"
+      })
+    }
+  })
+
+  return queryResult;
 }
 
 export const useBooks = <T extends BookTypes>(page: number, pageSize: number, type: T) => {
@@ -88,17 +120,19 @@ export const useUsers = () => {
 
 export const deleteUserQuery = () => {
   const mutation = useMutation({
-    mutationFn: deleteUser,
+    mutationFn: (id: string) => deleteUser(id),
     onSuccess: () => {
       toast({
         title: "Sukses",
         description: "Sapo larguat nje perdorues nga platforma"
       })
     },
-    onError: () => {
+    onError: (error) => {
+      
       toast({
         title: "Gabim!",
-        description: "Dicka shkoi gabim, ju lutem provoni perseri!"
+        description: "Dicka shkoi gabim, ju lutem provoni perseri!",
+        variant: "destructive"
       })
     }
   })

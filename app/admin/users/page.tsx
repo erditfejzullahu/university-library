@@ -7,7 +7,7 @@ import {
   getPaginationRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import { useUsers } from "@/hooks/data-fetch";
+import { deleteUserQuery, useUsers } from "@/hooks/data-fetch";
 import Link from "next/link";
 import config from "@/lib/config";
 import Image from "next/image";
@@ -25,13 +25,15 @@ type User = {
   universityIdCard: string;
 };
 
-const deleteUser = (userId: string) => {
-    console.log(userId);
-    
-}
 
 const Page = () => {
-    
+    const { mutate, isPending } = deleteUserQuery()
+    const deleteUser = (userId: string) => {
+      console.log("u thirr");
+      
+      mutate(userId);
+    }
+  
     const [dialogPopup, setDialogPopup] = useState({
         statusDialog: [] as string[],
         roleDialog: [] as string[],
@@ -83,13 +85,19 @@ const Page = () => {
     {
       header: "Roli",
       accessorKey: "role",
+      cell: (info) => (
+        <>
+          <span className="block cursor-pointer animate-pulse repeat-infinite duration-700 text-red font-semibold font-bebas-neue text-xl" onClick={() => handleDialogs("Role", info.row.original)}>{info.getValue() as string}</span>
+          <ChangeStatus type="Role" selected={info.getValue() as string} selectable={["ADMIN", "USER"]} opened={dialogPopup.roleDialog.includes(info.row.original.id)} onClose={() => handleDialogs("CloseRole", info.row.original)}/>
+        </>
+      )
     },
     {
       header: "Statusi",
       accessorKey: "status",
       cell: (info) => (
         <>
-        <span className="block cursor-pointer animate-pulse repeat-infinite duration-700" onClick={() => handleDialogs("Status", info.row.original)}>{info.getValue() as string}</span>
+        <span className="block cursor-pointer animate-pulse repeat-infinite duration-700 text-green font-semibold font-bebas-neue text-xl" onClick={() => handleDialogs("Status", info.row.original)}>{info.getValue() as string}</span>
             <ChangeStatus type="Status" selected={info.getValue() as string} selectable={["IN_REVIEW", "ACCEPTED"]} opened={dialogPopup.statusDialog.includes(info.row.original.id)} onClose={() => handleDialogs("CloseStatus", info.row.original)}/>
         </>
       )
@@ -109,7 +117,7 @@ const Page = () => {
         header: "Nderveproni",
         accessorKey: "id",
         cell: (info) => (
-            <Image className="mx-auto cursor-pointer" src={icons.garbage} width={20} height={20} alt="delete" onClick={() => deleteUser(info.getValue() as string)}/>
+            <button disabled={isPending} onClick={() => deleteUser(info.getValue() as string)}><Image className="mx-auto" src={icons.garbage} width={20} height={20} alt="delete"/></button>
         )
     }
   ];
