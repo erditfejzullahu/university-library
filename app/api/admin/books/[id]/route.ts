@@ -2,13 +2,15 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 export async function DELETE(req: Request, {params} : {params: {id: string}}){
     try {
-        const id = params.id;
+        const {id} = await params;
         type bookType = "Book" | "BorrowBook"
         const {searchParams} = new URL(req.url);
         const type = searchParams.get("type") as bookType;
 
-        
-        let book = null;
+        if(!id){
+            return NextResponse.json({message: "Missing id"}, {status: 400})
+        }
+        let book;
         
         if(type === "Book"){
             book = await prisma.books.delete({
@@ -31,7 +33,10 @@ export async function DELETE(req: Request, {params} : {params: {id: string}}){
 
 export async function PATCH(req: Request, {params}: {params: {id: string}}){
     try {
-        const id = params.id;
+        const {id} = await params;
+        if(!id){
+            return NextResponse.json({message: "Missing id"}, {status: 400})
+        }
         let body = null;
         type patchType = "Book" | "BorrowedBook"
         const {searchParams} = new URL(req.url);

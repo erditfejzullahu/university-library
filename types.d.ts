@@ -15,7 +15,6 @@ interface Book {
     createdAt: Date;
 }
 
-type UserRole = "IN_REVIEW" | "ACCEPTED"
 interface User {
     id: string;
     fullName: string;
@@ -79,3 +78,10 @@ interface BorrowedBookApiResponse {
     currentPage: number;
     totalPages: number;
 }
+
+interface UserApiResponse {
+    message: string;
+    users: User[];
+}
+
+type UserChangeType = "Role" | "Status";

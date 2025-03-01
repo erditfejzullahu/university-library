@@ -6,17 +6,22 @@ import { Role } from "@prisma/client";
 export async function PATCH(req: NextRequest, {params}: {params: {id: string}}){
     try {
         const body = await req.json();
-        const {role} = body;
+        
+        const {roleStatus} = body;
     
-        if(!role || typeof role !== "string" || !["ADMIN", "USER"].includes(role)){
+        if(!roleStatus || typeof roleStatus !== "string" || !["ADMIN", "USER"].includes(roleStatus)){
             return NextResponse.json({message: "Role is required"}, {status: 400})
         }
     
-        const id = params.id;
+        const {id} = await params;
+        if(!id){
+            return NextResponse.json({message: "Missing id"}, {status: 400})
+        }
+        
         await prisma.user.update({
             where: {id},
             data: {
-                role: role as Role
+                role: roleStatus as Role
             }
         })
     

@@ -1,7 +1,10 @@
 "use client"
 import { keepPreviousData, useMutation, useQueries, useQuery, UseQueryOptions, useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
 import { toast } from "./use-toast";
-import { Role } from "@prisma/client";
+import { Role, Status } from "@prisma/client";
+import { useQueryClient } from "@tanstack/react-query";
+
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_ENDPOINT; 
 
 type BookTypes = "BorrowBooks" | "Books"
@@ -29,24 +32,63 @@ const fetchUsers = async () => {
 
 const deleteUser = async (id: string) => {
   const res = await fetch(`${BASE_URL}/api/admin/users/${id}`, { method: "DELETE" });
-
-  if (!res.ok) {
-    throw new Error("Failed to delete user"); // Throw an error if the response is not OK
+  if(!res.ok){
+    throw new Error("Error deleting user");
   }
-
   const data = await res.json();
   return data;
 };
 
-const changeUserRole = async (id: string, role: Role) => {
-  const res = await fetch(`${BASE_URL}/api/admin/userRole/${id}`, {method: "PATCH", body: role})
+const changeUserRole = async (id: string, roleStatus: Role | Status, type: UserChangeType) => {
+  let url: string;
+  let body: string;
+
+
+  if(type === "Role"){
+    if(!Object.values(Role).includes(roleStatus as Role)){
+      throw new Error("Invalid role provided");
+    }
+    url = `${BASE_URL}/api/admin/userRole/${id}`;
+    body = JSON.stringify({roleStatus});
+  } else if(type === "Status"){
+    if(!Object.values(Status).includes(roleStatus as Status)){
+      throw new Error("Invalid status provided");
+    }
+    url = `${BASE_URL}/api/admin/userStatus/${id}`
+    body = JSON.stringify({roleStatus})
+  } else {
+    throw new Error("Invalid type provided")
+  }
+
+  const res = await fetch(url, {method: "PATCH", headers: {"Content-Type": "application/json"}, body })
+
+  if(!res.ok){
+    throw new Error("Error changing user role")
+  }
   return await res.json();
 }
 
 export const useChangeRole = () => {
-  const queryResult = useMutation({
-    mutationFn: ({id, role}: {id: string, role: Role}) => changeUserRole(id, role),
-    onSuccess: () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({id, roleStatus, type}: {id: string, roleStatus: Role | Status, type: UserChangeType}) => changeUserRole(id, roleStatus, type),
+
+    //data is api response and variable is data passed like {id, role}
+    onSuccess: (data, variables) => {
+      queryClient.setQueryData(["usersData"], (oldData: UserApiResponse | undefined) => {
+        if(!oldData) return oldData;
+        
+        return {
+          ...oldData,
+          users: oldData.users.map((user) => 
+            user.id === variables.id 
+              ? variables.type === "Role" 
+                ? {...user, role: variables.roleStatus} //role
+                : {...user, role: variables.roleStatus} //status  
+              : user)
+        }
+      })
       toast({
         title: "Sukses",
         description: "Sapo ndryshuat rolin e perdoruesit"
@@ -60,8 +102,6 @@ export const useChangeRole = () => {
       })
     }
   })
-
-  return queryResult;
 }
 
 export const useBooks = <T extends BookTypes>(page: number, pageSize: number, type: T) => {
@@ -118,17 +158,30 @@ export const useUsers = () => {
   return queryResult;
 }
 
-export const deleteUserQuery = () => {
-  const mutation = useMutation({
-    mutationFn: (id: string) => deleteUser(id),
-    onSuccess: () => {
+export const useDeleteUserQuery = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({id}: {id: string}) => deleteUser(id),
+    onSuccess: (_, variables) => {
+      
+      queryClient.setQueryData(["usersData"], (oldData: UserApiResponse | undefined) => {
+        console.log(oldData, ' old data');
+        
+        if(!oldData) return oldData;
+
+        return {
+          ...oldData,
+          users: oldData.users.filter((user) => user.id !== variables.id)
+        }
+      })
+
       toast({
         title: "Sukses",
         description: "Sapo larguat nje perdorues nga platforma"
       })
     },
-    onError: (error) => {
-      
+    onError: () => {
       toast({
         title: "Gabim!",
         description: "Dicka shkoi gabim, ju lutem provoni perseri!",
@@ -136,5 +189,4 @@ export const deleteUserQuery = () => {
       })
     }
   })
-  return mutation;
 }

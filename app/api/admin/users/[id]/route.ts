@@ -6,8 +6,8 @@ const prisma = new PrismaClient();
 export async function PATCH(req: Request, {params}: {params: {id: string}}) {
     try {
         const {...updateData} = await req.json();
-        const id = params.id;
-        if(id === null){
+        const {id} = await params;
+        if(!id){
             return NextResponse.json({message: "userId is required"}, {status: 400})
         }
 
@@ -26,9 +26,8 @@ export async function PATCH(req: Request, {params}: {params: {id: string}}) {
 export async function DELETE(req: Request, {params}: {params: {id:string}}) {
     try {
         const {id} = await params;
-        console.log(id);
-        
-        if(!id){
+
+        if(!id || typeof id !== "string"){
             return NextResponse.json({message: "UserId is required"}, {status: 400});
         }
 

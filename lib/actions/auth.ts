@@ -66,7 +66,7 @@ export const signUp = async (params: AuthCredentials) => {
 
         return {success: true};
     } catch (error) {
-        console.error(error, " signup error");
+        console.error(error instanceof Error ? error.message : " signup error");
         return {success: false, error: "signup error"}
     }
 }
