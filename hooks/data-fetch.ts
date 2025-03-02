@@ -85,7 +85,7 @@ export const useChangeRole = () => {
             user.id === variables.id 
               ? variables.type === "Role" 
                 ? {...user, role: variables.roleStatus} //role
-                : {...user, role: variables.roleStatus} //status  
+                : {...user, status: variables.roleStatus} //status  
               : user)
         }
       })
