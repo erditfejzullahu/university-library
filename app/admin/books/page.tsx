@@ -1,14 +1,15 @@
 "use client"
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import React from 'react'
-import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table'
+import React, { useState } from 'react'
+import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table'
 import Image from 'next/image'
 import config from '@/lib/config'
 import { icons } from '@/constants'
 import { fetchBooks, useBooks } from '@/hooks/data-fetch'
 import ErrorState from '@/components/ErrorState'
 import { useQuery } from '@tanstack/react-query'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 
 const page = () => {
 
@@ -22,6 +23,8 @@ const page = () => {
     refetchOnMount: false
   })
 
+  const [sorting, setSorting] = useState<SortingState>([])
+
   const columns: ColumnDef<Book>[] = [
     {
       header: "Titulli librit",
@@ -31,15 +34,18 @@ const page = () => {
           <img src={config.env.imagekit.urlEndpoint + info.row.original.coverUrl} className="h-20 object-contain"/>
           <p>{info.getValue() as string}</p>
         </div>  
-      )
+      ),
+      enableSorting: true
     },
     {
       header: "Autori",
-      accessorKey: "author"
+      accessorKey: "author",
+      enableSorting: true
     },
     {
       header: "Zhanri",
-      accessorKey: "genre"
+      accessorKey: "genre",
+      enableSorting: true
     },
     {
       header: "Data e krijimit",
@@ -54,7 +60,8 @@ const page = () => {
         return (
           formattedDate
         )
-      }
+      },
+      enableSorting: true
     },
     {
       header: "Aksione",
@@ -67,7 +74,8 @@ const page = () => {
             <Image src={icons.garbage} width={20} height={20} alt='delete'/>
           </div>
         </div>
-      )
+      ),
+      enableSorting: false
     }
   ]
 
@@ -76,6 +84,11 @@ const page = () => {
     data: data?.book || [],
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
+    state: {
+      sorting
+    },
     initialState: {
       pagination: {
         pageSize: 5
@@ -105,14 +118,29 @@ const page = () => {
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
-                      <th key={header.id} colSpan={header.colSpan} className="text-light-500 border-b font-semibold text-center p-4 bg-light-300">
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )
-                        }
+                      <th 
+                        key={header.id}
+                        colSpan={header.colSpan} 
+                        className="text-light-500 border-b font-semibold text-center p-4 bg-light-300 border cursor-pointer"
+                        onClick={header.column.getToggleSortingHandler()}
+                        >
+                          <div className={`flex flex-row items-center gap-2 justify-center`}>
+                            <div>
+                              {header.isPlaceholder
+                                ? null
+                                : flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )
+                              }
+                            </div>
+                            <div>
+                              {{
+                                asc: <ChevronUp />,
+                                desc: <ChevronDown />
+                              }[header.column.getIsSorted() as string] ?? null}
+                            </div>
+                          </div>
                       </th>
                     ))}
                   </tr>

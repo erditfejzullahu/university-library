@@ -6,6 +6,8 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   flexRender,
+  SortingState,
+  getSortedRowModel,
 } from "@tanstack/react-table";
 import { useDeleteUserQuery, useUsers } from "@/hooks/data-fetch";
 import Link from "next/link";
@@ -13,6 +15,7 @@ import config from "@/lib/config";
 import Image from "next/image";
 import { icons } from "@/constants";
 import ChangeStatus from "@/components/admin/ChangeStatus";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 // type User = {
 //   id: string;
@@ -68,19 +71,24 @@ const Page = () => {
 
   const { data, error, isLoading, isFetching } = useUsers();  
 
+  const [sorting, setSorting] = useState<SortingState>([])
+
   const columns: ColumnDef<User>[] = [
     {
       header: "Emri",
       accessorKey: "fullName",
+      enableSorting: true,
     },
     {
       header: "Librat e huazuar",
       accessorKey: "borrowedBooks",
       cell: (info) => info.getValue(), // Display the count of borrowed books
+      enableSorting: true,
     },
     {
       header: "I krijuar",
       accessorKey: "createdAt",
+      enableSorting: true,
     },
     {
       header: "Roli",
@@ -90,7 +98,8 @@ const Page = () => {
           <span className="block cursor-pointer animate-pulse repeat-infinite duration-700 text-red font-semibold font-bebas-neue text-xl" onClick={() => handleDialogs("Role", info.row.original)}>{info.getValue() as string}</span>
           <ChangeStatus data={info.row.original as User} type="Role" selected={info.getValue() as string} selectable={["ADMIN", "USER"]} opened={dialogPopup.roleDialog.includes(info.row.original.id)} onClose={() => handleDialogs("CloseRole", info.row.original)}/>
         </>
-      )
+      ),
+      enableSorting: true,
     },
     {
       header: "Statusi",
@@ -100,25 +109,29 @@ const Page = () => {
         <span className="block cursor-pointer animate-pulse repeat-infinite duration-700 text-green font-semibold font-bebas-neue text-xl" onClick={() => handleDialogs("Status", info.row.original)}>{info.getValue() as string}</span>
             <ChangeStatus data={info.row.original} type="Status" selected={info.getValue() as string} selectable={["IN_REVIEW", "ACCEPTED"]} opened={dialogPopup.statusDialog.includes(info.row.original.id)} onClose={() => handleDialogs("CloseStatus", info.row.original)}/>
         </>
-      )
+      ),
+      enableSorting: true,
     },
     {
       header: "ID e Universitetit",
       accessorKey: "universityId",
+      enableSorting: true,
     },
     {
       header: "Karta e Universitetit",
       accessorKey: "universityIdCard",
       cell: (info) => (
         <Link className="text-primary-admin text-sm font-semibold" href={config.env.imagekit.urlEndpoint + info.getValue()} target="_blank">Shiko karten</Link>
-      )
+      ),
+      enableSorting: false,
     },
     {
         header: "Nderveproni",
         accessorKey: "id",
         cell: (info) => (
             <button disabled={isPending} onClick={() => handleDelete(info.getValue() as string)}><Image className="mx-auto" src={icons.garbage} width={20} height={20} alt="delete"/></button>
-        )
+        ),
+        enableSorting: false,
     }
   ];
 
@@ -127,6 +140,11 @@ const Page = () => {
     data: data?.users || [], // Ensure data is defined
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
+    state: {
+      sorting
+    },
     initialState: {
       pagination: {
         pageSize: 5
@@ -148,13 +166,30 @@ const Page = () => {
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <th key={header.id} colSpan={header.colSpan} className="text-light-500 border-b font-semibold text-center p-4 bg-light-300">
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
+                  <th 
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    className="text-light-500 border-b font-semibold text-center p-4 bg-light-300 border cursor-pointer"
+                    onClick={header.column.getToggleSortingHandler()}
+                    >
+                    <div className="flex flex-row items-center gap-2 justify-center">
+                      <div>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
                         )}
+                      </div>
+                      <div>
+                        {
+                          {
+                            asc: <ChevronUp />,
+                            desc: <ChevronDown />
+                          }[header.column.getIsSorted() as string ?? null]
+                        }
+                      </div>
+                    </div>
                   </th>
                 ))}
               </tr>
