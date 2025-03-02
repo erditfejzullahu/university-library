@@ -5,8 +5,8 @@ export async function GET(req: NextRequest){
     try {
         type requestType = "Books" | "BorrowBooks" | "CountBooks" | "CountBorrowBooks"
         const type = req.nextUrl.searchParams.get("type") as requestType | null;
-        const page = Number(req.nextUrl.searchParams.get('page') || 1);
-        const pageSize = Number(req.nextUrl.searchParams.get("pageSize") || 10);        
+        const page = Number(req.nextUrl.searchParams.get('page') || 0);
+        const pageSize = Number(req.nextUrl.searchParams.get("pageSize") || 0);        
         
         if(!type) {
             return NextResponse.json({message: "type error"}, {status: 500})
@@ -16,26 +16,46 @@ export async function GET(req: NextRequest){
         let totalCount;
 
         if(type === "Books"){
-            const [data, count] = await Promise.all([
-                prisma.books.findMany({
-                    skip: (page - 1) * pageSize,
-                    take: pageSize
-                }),
-                prisma.books.count()
-            ])
-            book = data;
-            totalCount = count;
+            if(page === 0 && pageSize === 0){
+                const [data, count] = await Promise.all([
+                    prisma.books.findMany(),
+                    prisma.books.count()
+                ])
+                book = data;
+                totalCount = count
+            }else{
+                const [data, count] = await Promise.all([
+                    prisma.books.findMany({
+                        skip: (page - 1) * pageSize,
+                        take: pageSize
+                    }),
+                    prisma.books.count()
+                ])
+                book = data;
+                totalCount = count;
+            }
         }else if(type ===  "BorrowBooks"){
-            const [data, count] = await Promise.all([
-                prisma.borrowedBooks.findMany({
-                    skip: (page - 1) * pageSize,
-                    take: pageSize,
-                    include: {book: true}
-                }),
-                prisma.borrowedBooks.count()
-            ])
-            book = data;
-            totalCount = count;
+            if(page === 0 && pageSize === 0){
+                const [data, count] = await Promise.all([
+                    prisma.borrowedBooks.findMany({
+                        include: {book: true}
+                    }),
+                    prisma.borrowedBooks.count()
+                ])
+                book = data;
+                totalCount = count
+            }else{
+                const [data, count] = await Promise.all([
+                    prisma.borrowedBooks.findMany({
+                        skip: (page - 1) * pageSize,
+                        take: pageSize,
+                        include: {book: true}
+                    }),
+                    prisma.borrowedBooks.count()
+                ])
+                book = data;
+                totalCount = count;
+            }
         }else if (type === "CountBooks"){
             book = await prisma.books.count();
             totalCount = book;
@@ -51,7 +71,7 @@ export async function GET(req: NextRequest){
                 book,
                 message: "Operation completed successfully",
                 currentPage: page,
-                totalPages
+                totalPages: (page > 0 && pageSize > 0) ? totalPages : totalCount //nese ska pagination show totalcount
             }, 
             {status: 200}
         )

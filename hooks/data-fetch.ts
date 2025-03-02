@@ -12,7 +12,7 @@ type BookCountTypes = "CountBorrowBooks" | "CountBooks" | "UsersCount"
 
 type BookResponse<T extends BookTypes> = | (T extends "BorrowBooks" ? BorrowedBookApiResponse : T extends "Books" ? BookApiResponse : never) | null;
 
-const fetchBooks = async <T extends BookTypes>(page: number, pageSize: number, type: BookTypes): Promise<BookResponse<T>> => {
+export const fetchBooks = async <T extends BookTypes>(page: number, pageSize: number, type: BookTypes): Promise<BookResponse<T>> => {
     const res = await fetch(`${BASE_URL}/api/admin/books?type=${type}&page=${page}&pageSize=${pageSize}`)  
     const data = await res.json();    
     return data;
@@ -108,7 +108,9 @@ export const useBooks = <T extends BookTypes>(page: number, pageSize: number, ty
   const queryResult = useSuspenseQuery<BookResponse<T>>({
     queryKey: ['books', page, pageSize, type],
     queryFn: () => fetchBooks<T>(page, pageSize, type),
-    // staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnMount: false,
+    refetchOnWindowFocus: false
   });
   
   return queryResult;
@@ -119,7 +121,7 @@ export const useCounts = () => {
     queries: [
       {
         queryKey: ['bookCount'],
-        queryFn: () => fetchCounts("CountBooks")
+        queryFn: () => fetchCounts("CountBooks"),
       },
       {
         queryKey: ['userCount'],
@@ -129,7 +131,7 @@ export const useCounts = () => {
         queryKey: ['BorrowBooksCount'],
         queryFn: () => fetchCounts("CountBorrowBooks")
       }
-    ]
+    ],
   })  
 
   const [booksCountQuery, usersCountQuery, borrowBooksCountQuery] = queryResult;
@@ -154,6 +156,9 @@ export const useUsers = () => {
   const queryResult = useQuery({
     queryKey: ['usersData'],
     queryFn: fetchUsers,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnMount: false,
+    refetchOnWindowFocus: false
   })
   return queryResult;
 }
