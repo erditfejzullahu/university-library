@@ -11,8 +11,10 @@ import plus from "../public/icons/admin/plus.svg"
 import close from "../public/icons/admin/close.svg"
 import garbage from "../public/icons/admin/trash.svg"
 import edit from "../public/icons/admin/edit.svg"
+import receipt from "../public/icons/admin/receipt.svg"
 
 export default {
+    receipt,
     edit,
     garbage,
     plus,

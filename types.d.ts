@@ -62,7 +62,8 @@ interface BorrowedBook {
     status: "BORROWED" | "RETURNED";
     dueDate: Date;
     returnDate: Date | null;
-    book: Book
+    book: Book,
+    user?: User,
 }
 
 interface BookApiResponse {

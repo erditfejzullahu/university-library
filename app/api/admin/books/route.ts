@@ -38,7 +38,7 @@ export async function GET(req: NextRequest){
             if(page === 0 && pageSize === 0){
                 const [data, count] = await Promise.all([
                     prisma.borrowedBooks.findMany({
-                        include: {book: true}
+                        include: {book: true, user: true}
                     }),
                     prisma.borrowedBooks.count()
                 ])
@@ -49,7 +49,7 @@ export async function GET(req: NextRequest){
                     prisma.borrowedBooks.findMany({
                         skip: (page - 1) * pageSize,
                         take: pageSize,
-                        include: {book: true}
+                        include: {book: true, user: true}
                     }),
                     prisma.borrowedBooks.count()
                 ])

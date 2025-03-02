@@ -158,7 +158,7 @@ const Page = () => {
   return (
     <div className="rounded-lg bg-white p-4">
       <div>
-        <h2 className="text-2xl font-semibold text-black">Te gjithe perdoruesit</h2>
+        <h2 className="text-xl font-semibold">Te gjithe perdoruesit</h2>
       </div>
       <div className="mt-2">
         <table className="border-spacing-2 border w-full">
