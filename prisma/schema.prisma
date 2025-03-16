@@ -53,7 +53,7 @@ model User {
 
 model Books {
   id String @id @default(uuid())
-  title String @db.VarChar(150)
+  title String @unique @db.VarChar(150)
   author String
   genre String
   rating Float

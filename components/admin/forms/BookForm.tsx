@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { bookSchema } from '@/lib/validations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useEffect } from 'react'
 import {useForm} from "react-hook-form"
 import { Form } from '@/components/ui/form';
 import { z } from 'zod';
@@ -12,7 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import FileUpload from '@/components/FileUpload';
 import ColorPicker from '../ColorPicker';
-import { createBook } from '@/lib/admin/actions/book';
+import { createBook, editBook } from '@/lib/admin/actions/book';
 import { toast } from '@/hooks/use-toast';
 
 interface Props extends Partial<Book> {
@@ -26,35 +26,69 @@ const BookForm = ({type, ...book}: Props) => {
     const form = useForm<z.infer<typeof bookSchema>>({
         resolver: zodResolver(bookSchema),
         defaultValues: {
-            title: "",
-            description: "",
-            author: "",
-            genre: "",
-            rating: 1,
-            totalCopies: 1,
-            availableCopies: 1,
-            coverUrl: "",
-            coverColor: "",
-            videoUrl: "",
-            summary: ""
+            title: book.title || "",
+            description: book.description || "",
+            author: book.author || "",
+            genre: book.genre || "",
+            rating: book.rating || 1,
+            totalCopies: book.totalCopies || 1,
+            availableCopies: book.availableCopies || 1,
+            coverUrl: book.coverUrl || "",
+            coverColor: book.coverColor || "",
+            videoUrl: book.video || "",
+            summary: book.summary || ""
         }
     })
 
-    const onSubmit = async(values: z.infer<typeof bookSchema>) => {
-        const result = await createBook(values);
-        if(result.success){
-            toast({
-                title: "Sukses",
-                description: "Libri u shtua me sukses"
-            })
+    // useEffect(() => {
+    //     if(book){
+    //         form.reset({
+    //             title: book.title || "",
+    //             description: book.description || "",
+    //             author: book.author || "",
+    //             genre: book.genre || "",
+    //             rating: book.rating || 1,
+    //             totalCopies: book.totalCopies || 1,
+    //             availableCopies: book.availableCopies || 1,
+    //             coverUrl: book.coverUrl || "",
+    //             coverColor: book.coverColor || "",
+    //             videoUrl: book.video || "",
+    //             summary: book.summary || ""
+    //         }); 
+    //     }
+    // }, [book]);
 
-            router.push(`/admin/books/${result.data?.id}`)
-        }else{
-            toast({
-                title: "Dicka shkoi gabim",
-                description: `${result.message}`,
-                variant:"destructive"
-            })
+    const onSubmit = async(values: z.infer<typeof bookSchema>) => {
+        if(type === "create"){
+            const result = await createBook(values);
+            if(result.success){
+                toast({
+                    title: "Sukses",
+                    description: "Libri u shtua me sukses"
+                })
+    
+                router.push(`/admin/books/${result.data?.id}`)
+            }else{
+                toast({
+                    title: "Dicka shkoi gabim",
+                    description: `${result.message}`,
+                    variant:"destructive"
+                })
+            }
+        }else {
+            const result = await editBook(values);
+            if(result.success){
+                toast({
+                    title: "Sukses",
+                    description: "Libri u perditesua me sukses"
+                })
+            }else{
+                toast({
+                    title: "Dicka shkoi gabim",
+                    description: `${result.message}`,
+                    variant: "destructive"
+                })
+            }
         }
     };
   return (
