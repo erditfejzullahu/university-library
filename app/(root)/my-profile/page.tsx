@@ -6,9 +6,11 @@ import { prisma } from '@/lib/prisma'
 import Image from 'next/image'
 import { icons } from '@/constants'
 import BorrowedBooksList from '@/components/BorrowedBooksList'
-import { Avatar } from '@/components/ui/avatar'
+import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import { AvatarFallback } from '@radix-ui/react-avatar'
 import config from '@/lib/config'
+import { getInitials } from '@/lib/utils'
+import ProfileImageUploads from '@/components/ProfileImageUploads'
 
 const page = async () => {
   const session = await auth();
@@ -18,7 +20,6 @@ const page = async () => {
       book: true
     }
   })
-  console.log(session);
   
   return (
     <>
@@ -29,11 +30,7 @@ const page = async () => {
             {/* img details */}
             <div className="flex flex-row items-center gap-4 max-[460px]:flex-col">
               <div className="rounded-full p-2 bg-dark-600">
-                <Avatar className="bg-white items-center justify-center h-20 w-20">
-                  <AvatarFallback>
-                    EF
-                  </AvatarFallback>
-                </Avatar>
+                <ProfileImageUploads/>
               </div>
 
               <div className="flex flex-col items-start gap-1 max-[460px]:items-center">

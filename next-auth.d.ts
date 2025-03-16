@@ -7,6 +7,7 @@ declare module "next-auth" {
         universityIdCard: string;
         verified: boolean;
         role: Role;
+        profileImage: string;
     }
 
     interface Session {
@@ -22,5 +23,6 @@ declare module "next-auth/jwt" {
         universityIdCard: string;
         verified: boolean;
         role: Role;
+        profileImage: string;
     }
 }

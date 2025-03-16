@@ -35,7 +35,8 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                     universityId: user.universityId,
                     universityIdCard: user.universityIdCard,
                     verified: user.status === "ACCEPTED" ? true : false,
-                    role: user.role
+                    role: user.role,
+                    profileImage: user.profileImage!
                 }
             }
         })
@@ -44,7 +45,11 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
         signIn: "/sign-in"
     },
     callbacks: {
-        async jwt({token, user}){
+        async jwt({token, user, trigger, session}){
+            if(trigger === "update"){
+                return {...token, ...session.user}
+            }
+
             if(user){
                 token.sub = user.id;
                 token.name = user.name;
@@ -52,7 +57,8 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                 token.universityId = user.universityId;
                 token.universityIdCard = user.universityIdCard;
                 token.verified = user.verified;
-                token.role = user.role
+                token.role = user.role;
+                token.profileImage = user.profileImage;
             }
 
             return token;
@@ -65,7 +71,8 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
                 session.user.universityId = token.universityId as number;
                 session.user.universityIdCard = token.universityIdCard as string;
                 session.user.verified = token.verified as boolean;
-                session.user.role = token.role
+                session.user.role = token.role;
+                session.user.profileImage = token.profileImage;
             }
             return session;
         }

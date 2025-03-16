@@ -43,6 +43,7 @@ model User {
   status Status @default(IN_REVIEW)
   universityId Int @unique
   universityIdCard String
+  profileImage String? @default("https://cdn.pixabay.com/photo/2015/03/04/22/35/avatar-659652_640.png")
   createdAt DateTime @default(now())
   lastActivity DateTime @default(now())
 

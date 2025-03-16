@@ -22,6 +22,7 @@ interface User {
     role: string;
     status: UserRole;
     universityId: string;
+    profileImage: string;
     universityIdCard: string;
     createdAt: Date;
     lastActivity: Date;

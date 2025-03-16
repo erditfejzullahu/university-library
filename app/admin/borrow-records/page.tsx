@@ -43,7 +43,7 @@ const page = () => {
             cell: (info) => (
                 <div className="flex flex-row items-center gap-2">
                     <div>
-                        <img src={icons.verifiedIcon} className="size-14 rounded-full"/>
+                        <img src={info.row.original.user?.profileImage!} alt={`profile-${info.row.original.user?.fullName}`} className="size-14 rounded-full"/>
                     </div>
                     <div>
                         <p className="text-black text-base font-semibold text-left">{info.row.original.user?.fullName}</p>
