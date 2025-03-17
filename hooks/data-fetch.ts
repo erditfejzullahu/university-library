@@ -32,12 +32,21 @@ const fetchUsers = async () => {
 
 const deleteUser = async (id: string) => {
   const res = await fetch(`${BASE_URL}/api/admin/users/${id}`, { method: "DELETE" });
+  const data = await res.json();
   if(!res.ok){
     throw new Error("Error deleting user");
   }
-  const data = await res.json();
   return data;
 };
+
+const deleteBook = async (id: string) => {
+  const res = await fetch(`${BASE_URL}/api/admin/books/${id}?type=Book`, {method: "DELETE"});
+  const data = await res.json()
+  if(!res.ok){
+    throw new Error("Error deleting book");
+  }
+  return data;
+}
 
 const changeUserRole = async (id: string, roleStatus: Role | Status, type: UserChangeType) => {
   let url: string;
@@ -163,6 +172,34 @@ export const useUsers = () => {
   return queryResult;
 }
 
+export const useDeleteBook = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({id}: {id: string}) => deleteBook(id),
+    onSuccess: (_, variables) => {
+      queryClient.setQueryData(["allbooks"], (oldData: BookApiResponse | undefined) => {
+        if(!oldData) return oldData;
+        return {
+          ...oldData,
+          book: oldData.book.filter((item) => item.id !== variables.id)
+        }
+      })
+      toast({
+        title: "Sukses",
+        description: "Sapo larguat nje liber nga platforma"
+      })
+    },
+    onError: () => {
+      toast({
+        title: "Gabim!",
+        description: "Dicka shkoi gabim, ju lutem provoni perseri!",
+        variant: "destructive"
+      })
+    }
+  })
+}
+
 export const useDeleteUserQuery = () => {
   const queryClient = useQueryClient();
 
@@ -171,7 +208,6 @@ export const useDeleteUserQuery = () => {
     onSuccess: (_, variables) => {
       
       queryClient.setQueryData(["usersData"], (oldData: UserApiResponse | undefined) => {
-        console.log(oldData, ' old data');
         
         if(!oldData) return oldData;
 

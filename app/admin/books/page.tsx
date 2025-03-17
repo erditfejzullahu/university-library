@@ -6,7 +6,7 @@ import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, getSorte
 import Image from 'next/image'
 import config from '@/lib/config'
 import { icons } from '@/constants'
-import { fetchBooks, useBooks } from '@/hooks/data-fetch'
+import { fetchBooks, useBooks, useDeleteBook } from '@/hooks/data-fetch'
 import ErrorState from '@/components/ErrorState'
 import { useQuery } from '@tanstack/react-query'
 import { ChevronDown, ChevronUp } from 'lucide-react'
@@ -22,6 +22,12 @@ const page = () => {
     refetchOnWindowFocus: false,
     refetchOnMount: false
   })
+
+  const deleteBookMutation = useDeleteBook();
+
+  const handleDelete = (id: string) => {
+    deleteBookMutation.mutate({id});
+  }
 
   const [sorting, setSorting] = useState<SortingState>([])
 
@@ -72,9 +78,9 @@ const page = () => {
               <Image src={icons.edit} width={20} height={20} alt='edit'/>
             </Link>
           </div>
-          <div>
+          <Button onClick={() => handleDelete(info.row.original.id)}>
             <Image src={icons.garbage} width={20} height={20} alt='delete'/>
-          </div>
+          </Button>
         </div>
       ),
       enableSorting: false
