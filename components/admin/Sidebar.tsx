@@ -1,13 +1,14 @@
 "use client"
 import { adminSideBarLinks } from '@/constants'
 import { cn, getInitials } from '@/lib/utils'
-import { BookOpenText } from 'lucide-react'
+import { BookOpenText, LogOut } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
 import { Avatar, AvatarFallback } from '../ui/avatar'
 import { Session } from 'next-auth'
+import { signOut } from 'next-auth/react'
 
 const Sidebar = ({session}: {session: Session}) => {
     const pathname = usePathname();
@@ -47,6 +48,9 @@ const Sidebar = ({session}: {session: Session}) => {
             <div className="flex flex-col max-md:hidden">
                 <p className="font-semibold text-dark-200">{session?.user?.name}</p>
                 <p className="text-light-500 text-xs">{session?.user?.email}</p>
+            </div>
+            <div className="flex items-center cursor-pointer" onClick={() => signOut()}>
+                <LogOut />
             </div>
         </div>
     </div>

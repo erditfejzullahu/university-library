@@ -15,7 +15,7 @@ const page = async () => {
         <ThreeBoxes />
       </Suspense>
     </section>
-    <section className="mt-4">
+    <section className="mt-4  overflow-hidden!">
       <div className="flex flex-row gap-4 justify-between">
         <Suspense fallback={<Skeleton className="h-[200px] w-full rounded-lg"/>}>
           <BorrowRequests session={session} />

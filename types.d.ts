@@ -21,8 +21,8 @@ interface User {
     email: string;
     role: string;
     status: UserRole;
-    universityId: string;
-    profileImage: string;
+    universityId: number;
+    profileImage: string | null;
     universityIdCard: string;
     createdAt: Date;
     lastActivity: Date;

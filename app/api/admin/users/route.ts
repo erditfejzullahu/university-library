@@ -1,11 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import {omit} from "lodash"
 
 export async function GET(){
     try {
+
         const usersData = await prisma.user.findMany({
-            include: {
+            where: {
+                status: "ACCEPTED"
+            },
+            include:{
                 borrowedBooks: true
             }
         })
@@ -16,9 +20,7 @@ export async function GET(){
         const users = usersData.map((user) => ({
             ...omit(user, ["password"]),
             borrowedBooks: user.borrowedBooks.length
-        }))
-        console.log(users);
-        
+        }))        
 
         return NextResponse.json({users, message: "Operacion completed successfully"}, {status: 200})
 

@@ -29,7 +29,7 @@ const RecentlyAdded = ({session}: {session: Session | null}) => {
                 <span className="text-xl  text-dark-100 font-semibold">Librat e shtuar se fundmi</span>
             </div>
             <div>
-                <Link href={"/admin/all-borrow-requests"} className="bg-light-300 text-primary-admin font-medium py-1.5 px-4 rounded-lg text-sm">Shiko te gjitha</Link>
+                <Link href={"/admin/all-books"} className="bg-light-300 text-primary-admin font-medium py-1.5 px-4 rounded-lg text-sm">Shiko te gjitha</Link>
             </div>
         </div>
         <Link href={"/admin/books/new"} className="bg-light-300 rounded-lg flex-1 mt-4 flex flex-row items-center gap-4 p-4">
@@ -40,7 +40,7 @@ const RecentlyAdded = ({session}: {session: Session | null}) => {
             <p className="text-lg text-black font-ibm-plex-sans">Shto nje liber te ri</p>
           </div>
         </Link>
-        <div className="mt-4 after:pointer-events-none after:content-[''] after:absolute after:left-0 after:top-0 after:h-full after:w-full after:admin-list">
+        <div className="mt-4 relative after:pointer-events-none after:content-[''] after:absolute after:left-0 after:top-0 after:h-full after:w-full after:admin-list">
           {data?.book.map((item) => (
             <Link key={item.id} href={item.id}>
               <BookListAdmin  session={session} type="Book" request={item}/>

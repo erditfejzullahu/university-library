@@ -3,6 +3,7 @@ import { keepPreviousData, useMutation, useQueries, useQuery, UseQueryOptions, u
 import { toast } from "./use-toast";
 import { Role, Status } from "@prisma/client";
 import { useQueryClient } from "@tanstack/react-query";
+import { StatusErrors } from "@/utils/ErrorTypes";
 
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_ENDPOINT; 
@@ -30,7 +31,40 @@ const fetchUsers = async () => {
   return data;
 }
 
-const deleteUser = async (id: string) => {
+export const fetchUsersPending = async () => {
+  const res = await fetch(`${BASE_URL}/api/admin/usersPending`)
+  if(!res.ok){
+    if(res.status === 400){
+      throw new Error(StatusErrors[1])
+    }else{
+      throw new Error(StatusErrors[2])
+    }
+  }
+  const data = await res.json();
+  return data;
+}
+
+export const updateUser = async (id: string, data: User) => {
+  const res = await fetch(`${BASE_URL}/api/admin/usersPending/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+
+  if(!res.ok){
+    if(res.status === 400){
+      throw new Error(StatusErrors[1])
+    }else{
+      throw new Error("Error updating user");
+    }
+  }
+  
+  return await res.json();
+}
+
+export const deleteUser = async (id: string) => {
   const res = await fetch(`${BASE_URL}/api/admin/users/${id}`, { method: "DELETE" });
   const data = await res.json();
   if(!res.ok){
