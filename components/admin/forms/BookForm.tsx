@@ -35,7 +35,7 @@ const BookForm = ({type, ...book}: Props) => {
             availableCopies: book.availableCopies || 1,
             coverUrl: book.coverUrl || "",
             coverColor: book.coverColor || "",
-            videoUrl: book.video || "",
+            videoUrl: book.videoUrl || "",
             summary: book.summary || ""
         }
     })
@@ -68,6 +68,7 @@ const BookForm = ({type, ...book}: Props) => {
                 })
     
                 router.push(`/admin/books/${result.data?.id}`)
+                scrollTo({top: 0, behavior: "smooth"})
             }else{
                 toast({
                     title: "Dicka shkoi gabim",
@@ -82,6 +83,7 @@ const BookForm = ({type, ...book}: Props) => {
                     title: "Sukses",
                     description: "Libri u perditesua me sukses"
                 })
+                scrollTo({top: 0, behavior: "smooth"})
             }else{
                 toast({
                     title: "Dicka shkoi gabim",
@@ -91,6 +93,7 @@ const BookForm = ({type, ...book}: Props) => {
             }
         }
     };
+    
   return (
     <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -338,7 +341,7 @@ const BookForm = ({type, ...book}: Props) => {
                 )}
             >
             </FormField>
-            <Button type='submit' className="book-form_btn">Shtoni librin ne librari</Button>
+            <Button type='submit' className="book-form_btn">{type === "create" ? "Shtoni librin ne librari" : "Rifreskoni librin"}</Button>
         </form>
     </Form>
   )

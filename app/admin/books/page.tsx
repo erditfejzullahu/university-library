@@ -68,7 +68,9 @@ const page = () => {
       cell: (info) => (
         <div className="flex flex-row gap-2 items-center justify-center">
           <div>
-            <Image src={icons.edit} width={20} height={20} alt='edit'/>
+            <Link href={`/admin/books/edit/${info.row.original.id}`}>
+              <Image src={icons.edit} width={20} height={20} alt='edit'/>
+            </Link>
           </div>
           <div>
             <Image src={icons.garbage} width={20} height={20} alt='delete'/>

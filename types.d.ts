@@ -11,7 +11,7 @@ interface Book {
     summary:string;
     isLoanedBook?:boolean;
     description: string;
-    video?: string;
+    videoUrl?: string;
     createdAt: Date;
 }
 
